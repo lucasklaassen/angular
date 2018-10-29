@@ -135,3 +135,36 @@ be regenerated, the app will rebuild and the page will reload.
 
 * If you get a build error complaining about examples or any other odd behavior, be sure to consult
 the [Authors Style Guide](https://angular.io/guide/docs-style-guide).
+
+
+# WDI Notes:
+
+1. Create a new ec2 instance - AMI: ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-20180912 (ami-0e32ec5bc225539f5)
+1. Setup application load balancer with https access
+2. SSL through AWS apply to loadbalancer.
+3. Point wildcard A record for *.wdibuilds.io to load balancer which has WDIBuilds instance in it.
+4. clone angular fork from lucasklaassen
+5. set up the following directories:
+  a. ~/home/wdi-logs
+  b. var/www/aio-builds/ (chown this directory for the user www-data)
+  c. ~/home/wdi-secrets
+  d. ~/home/angular/aio/aio-builds-setup/dockerbuild
+6. Build docker image:
+./angular/aio/aio-builds-setup/scripts/create-image.sh wdi-builds \
+  --build-arg AIO_GITHUB_ORGANIZATION=Vin65 \
+  --build-arg AIO_GITHUB_REPO=subscriptions-admin \
+  --build-arg AIO_DOMAIN_NAME=wdibuilds.io \
+  --build-arg AIO_GITHUB_TEAM_SLUGS=developers,admins
+7. Run docker image:
+sudo docker run \
+  --detach \
+  --dns 127.0.0.1 \
+  --name wdi-builds-13 \
+  --publish 80:80 \
+  --publish 443:443 \
+  --restart unless-stopped \
+  --volume /home/wdi-secrets:/aio-secrets:ro \
+  --volume /var/www/aio-builds:/var/www/aio-builds \
+  --volume /home/wdi-logs:/var/log/aio \
+  --volume /home/angular/aio/aio-builds-setup/dockerbuild:/dockerbuild \
+  wdi-builds
