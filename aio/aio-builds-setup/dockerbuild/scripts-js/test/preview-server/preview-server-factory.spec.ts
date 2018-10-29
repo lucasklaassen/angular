@@ -299,12 +299,9 @@ describe('PreviewServerFactory', () => {
       const pr = 777;
       const url = `${baseUrl}/${pr}`;
       let bvGetPrIsTrustedSpy: jasmine.Spy;
-      let bvGetSignificantFilesChangedSpy: jasmine.Spy;
 
       beforeEach(() => {
         bvGetPrIsTrustedSpy = spyOn(buildVerifier, 'getPrIsTrusted').and.returnValue(Promise.resolve(true));
-        bvGetSignificantFilesChangedSpy = spyOn(buildVerifier, 'getSignificantFilesChanged').
-          and.returnValue(Promise.resolve(true));
       });
 
 
@@ -330,55 +327,6 @@ describe('PreviewServerFactory', () => {
       });
 
 
-      it('should respond appropriately if the PR did not touch any significant files', async () => {
-        bvGetSignificantFilesChangedSpy.and.returnValue(Promise.resolve(false));
-
-        const expectedResponse = {canHavePublicPreview: false, reason: 'No significant files touched.'};
-        const expectedLog = `PR:${pr} - Cannot have a public preview, because it did not touch any significant files.`;
-
-        await agent.get(url).expect(200, expectedResponse);
-
-        expect(bvGetSignificantFilesChangedSpy).toHaveBeenCalledWith(pr, jasmine.any(RegExp));
-        expect(bvGetPrIsTrustedSpy).not.toHaveBeenCalled();
-        expect(loggerLogSpy).toHaveBeenCalledWith(expectedLog);
-      });
-
-
-      it('should respond appropriately if the PR is not automatically verifiable as "trusted"', async () => {
-        bvGetPrIsTrustedSpy.and.returnValue(Promise.resolve(false));
-
-        const expectedResponse = {canHavePublicPreview: false, reason: 'Not automatically verifiable as "trusted".'};
-        const expectedLog =
-          `PR:${pr} - Cannot have a public preview, because not automatically verifiable as "trusted".`;
-
-        await agent.get(url).expect(200, expectedResponse);
-
-        expect(bvGetSignificantFilesChangedSpy).toHaveBeenCalledWith(pr, jasmine.any(RegExp));
-        expect(bvGetPrIsTrustedSpy).toHaveBeenCalledWith(pr);
-        expect(loggerLogSpy).toHaveBeenCalledWith(expectedLog);
-      });
-
-
-      it('should respond appropriately if the PR can have a preview', async () => {
-        const expectedResponse = {canHavePublicPreview: true, reason: null};
-        const expectedLog = `PR:${pr} - Can have a public preview.`;
-
-        await agent.get(url).expect(200, expectedResponse);
-
-        expect(bvGetSignificantFilesChangedSpy).toHaveBeenCalledWith(pr, jasmine.any(RegExp));
-        expect(bvGetPrIsTrustedSpy).toHaveBeenCalledWith(pr);
-        expect(loggerLogSpy).toHaveBeenCalledWith(expectedLog);
-      });
-
-
-      it('should respond with error if `getSignificantFilesChanged()` fails', async () => {
-        bvGetSignificantFilesChangedSpy.and.callFake(() => Promise.reject('getSignificantFilesChanged error'));
-
-        await agent.get(url).expect(500, 'getSignificantFilesChanged error');
-        expect(loggerErrorSpy).toHaveBeenCalledWith('Previewability check error', 'getSignificantFilesChanged error');
-      });
-
-
       it('should respond with error if `getPrIsTrusted()` fails', async () => {
         const error = new Error('getPrIsTrusted error');
         bvGetPrIsTrustedSpy.and.callFake(() => { throw error; });
@@ -392,7 +340,6 @@ describe('PreviewServerFactory', () => {
 
     describe('POST /circle-build', () => {
       let getGithubInfoSpy: jasmine.Spy;
-      let getSignificantFilesChangedSpy: jasmine.Spy;
       let downloadBuildArtifactSpy: jasmine.Spy;
       let getPrIsTrustedSpy: jasmine.Spy;
       let createBuildSpy: jasmine.Spy;
@@ -419,7 +366,6 @@ describe('PreviewServerFactory', () => {
         AFFECTS_SIGNIFICANT_FILES = true;
         getGithubInfoSpy = spyOn(buildRetriever, 'getGithubInfo')
           .and.callFake(() => Promise.resolve(BUILD_INFO));
-        getSignificantFilesChangedSpy = spyOn(buildVerifier, 'getSignificantFilesChanged')
           .and.callFake(() => Promise.resolve(AFFECTS_SIGNIFICANT_FILES));
         downloadBuildArtifactSpy = spyOn(buildRetriever, 'downloadBuildArtifact')
           .and.callFake(() => Promise.resolve(DOWNLOADED_ARTIFACT_PATH));
@@ -444,7 +390,6 @@ describe('PreviewServerFactory', () => {
       it('should create a preview if everything is good and the build succeeded', async () => {
         await agent.post(URL).send(BASIC_PAYLOAD).expect(201);
         expect(getGithubInfoSpy).toHaveBeenCalledWith(BUILD_NUM);
-        expect(getSignificantFilesChangedSpy).toHaveBeenCalledWith(PR, jasmine.any(RegExp));
         expect(downloadBuildArtifactSpy).toHaveBeenCalledWith(BUILD_NUM, PR, SHA, defaultConfig.buildArtifactPath);
         expect(getPrIsTrustedSpy).toHaveBeenCalledWith(PR);
         expect(createBuildSpy).toHaveBeenCalledWith(PR, SHA, DOWNLOADED_ARTIFACT_PATH, IS_PUBLIC);
@@ -454,7 +399,6 @@ describe('PreviewServerFactory', () => {
         BASIC_PAYLOAD.payload.build_parameters.CIRCLE_JOB = 'lint';
         await agent.post(URL).send(BASIC_PAYLOAD).expect(204);
         expect(getGithubInfoSpy).not.toHaveBeenCalled();
-        expect(getSignificantFilesChangedSpy).not.toHaveBeenCalled();
         expect(loggerLogSpy).toHaveBeenCalledWith(
           'Build:12345, Job:lint -', 'Skipping preview processing because this is not the "aio_preview" job.');
         expect(downloadBuildArtifactSpy).not.toHaveBeenCalled();
@@ -466,7 +410,6 @@ describe('PreviewServerFactory', () => {
         AFFECTS_SIGNIFICANT_FILES = false;
         await agent.post(URL).send(BASIC_PAYLOAD).expect(204);
         expect(getGithubInfoSpy).toHaveBeenCalledWith(BUILD_NUM);
-        expect(getSignificantFilesChangedSpy).toHaveBeenCalledWith(PR, jasmine.any(RegExp));
         expect(loggerLogSpy).toHaveBeenCalledWith(
           'PR:777, Build:12345 - Skipping preview processing because this PR did not touch any significant files.');
         expect(downloadBuildArtifactSpy).not.toHaveBeenCalled();

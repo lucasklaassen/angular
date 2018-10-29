@@ -75,11 +75,7 @@ export class PreviewServerFactory {
       try {
         const pr = +canHavePublicPreviewRe.exec(req.url)![1];
 
-        if (!await buildVerifier.getSignificantFilesChanged(pr, significantFilesRe)) {
-          // Cannot have preview: PR did not touch relevant files: `aio/` or `packages/` (except for spec files).
-          res.send({canHavePublicPreview: false, reason: 'No significant files touched.'});
-          logger.log(`PR:${pr} - Cannot have a public preview, because it did not touch any significant files.`);
-        } else if (!await buildVerifier.getPrIsTrusted(pr)) {
+        if (!await buildVerifier.getPrIsTrusted(pr)) {
           // Cannot have preview: PR not automatically verifiable as "trusted".
           res.send({canHavePublicPreview: false, reason: 'Not automatically verifiable as "trusted".'});
           logger.log(`PR:${pr} - Cannot have a public preview, because not automatically verifiable as "trusted".`);
@@ -132,14 +128,6 @@ export class PreviewServerFactory {
           `Invalid webhook: expected "githubOrg" property to equal "${cfg.githubOrg}" but got "${org}".`);
         assert(cfg.githubRepo === repo,
           `Invalid webhook: expected "githubRepo" property to equal "${cfg.githubRepo}" but got "${repo}".`);
-
-        // Do not deploy unless this PR has touched relevant files: `aio/` or `packages/` (except for spec files)
-        if (!await buildVerifier.getSignificantFilesChanged(pr, significantFilesRe)) {
-          res.sendStatus(204);
-          logger.log(`PR:${pr}, Build:${buildNum} - ` +
-                     `Skipping preview processing because this PR did not touch any significant files.`);
-          return;
-        }
 
         const artifactPath = await buildRetriever.downloadBuildArtifact(buildNum, pr, sha, cfg.buildArtifactPath);
         const isPublic = await buildVerifier.getPrIsTrusted(pr);
