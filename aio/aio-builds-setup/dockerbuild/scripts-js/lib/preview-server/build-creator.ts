@@ -42,7 +42,6 @@ export class BuildCreator extends EventEmitter {
         dirToRemoveOnError = prDirExisted ? shaDir : prDir;
 
         return Promise.resolve().
-          then(() => shell.exec('ls /var/www/')).
           then(() => shell.mkdir('-p', shaDir)).
           then(() => this.extractArchive(archivePath, shaDir)).
           then(() => this.emit(CreatedBuildEvent.type, new CreatedBuildEvent(+pr, sha, isPublic))).
