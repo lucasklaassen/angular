@@ -316,7 +316,6 @@ describe('PreviewServerFactory', () => {
       let createBuildSpy: jasmine.Spy;
       let IS_PUBLIC: boolean;
       let BUILD_INFO: GithubInfo;
-      let AFFECTS_SIGNIFICANT_FILES: boolean;
       let BASIC_PAYLOAD: CircleCiWebHookPayload;
       const URL = '/circle-build';
       const BUILD_NUM = 12345;
@@ -334,7 +333,6 @@ describe('PreviewServerFactory', () => {
           success: true,
         };
         BASIC_PAYLOAD = { payload: { build_num: BUILD_NUM, build_parameters: { CIRCLE_JOB: 'aio_preview' } } };
-        AFFECTS_SIGNIFICANT_FILES = true;
         getGithubInfoSpy = spyOn(buildRetriever, 'getGithubInfo')
           .and.callFake(() => Promise.resolve(BUILD_INFO));
         downloadBuildArtifactSpy = spyOn(buildRetriever, 'downloadBuildArtifact')
@@ -377,7 +375,6 @@ describe('PreviewServerFactory', () => {
       });
 
       it('should respond with 204 if the build did not affect any significant files', async () => {
-        AFFECTS_SIGNIFICANT_FILES = false;
         await agent.post(URL).send(BASIC_PAYLOAD).expect(204);
         expect(getGithubInfoSpy).toHaveBeenCalledWith(BUILD_NUM);
         expect(loggerLogSpy).toHaveBeenCalledWith(
