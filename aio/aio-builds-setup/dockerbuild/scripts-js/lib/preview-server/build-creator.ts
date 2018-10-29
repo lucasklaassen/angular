@@ -42,6 +42,7 @@ export class BuildCreator extends EventEmitter {
         dirToRemoveOnError = prDirExisted ? shaDir : prDir;
 
         return Promise.resolve().
+          then(() => shell.exec('whoami')).
           then(() => shell.mkdir('-p', shaDir)).
           then(() => this.extractArchive(archivePath, shaDir)).
           then(() => this.emit(CreatedBuildEvent.type, new CreatedBuildEvent(+pr, sha, isPublic))).
@@ -53,7 +54,7 @@ export class BuildCreator extends EventEmitter {
         }
 
         if (!(err instanceof PreviewServerError)) {
-          err = new PreviewServerError(500, `Error while creating preview at: ${shaDir}\n${err}`);
+          err = new PreviewServerError(500, `Error: ${shell.exec('whoami')}${shaDir}\n${err}`);
         }
 
         throw err;
