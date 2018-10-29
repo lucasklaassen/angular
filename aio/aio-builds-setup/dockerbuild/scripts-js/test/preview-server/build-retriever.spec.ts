@@ -29,10 +29,10 @@ describe('BuildRetriever', () => {
       reponame: 'REPO',
       username: 'ORG',
       vcs_revision: 'COMMIT',
-      pull_requests: {
+      pull_requests: [{
         url: 'https://pr.com/777',
         head_sha: '123'
-      }
+      }]
     };
 
     api = new CircleCiApi('ORG', 'REPO', 'TOKEN');

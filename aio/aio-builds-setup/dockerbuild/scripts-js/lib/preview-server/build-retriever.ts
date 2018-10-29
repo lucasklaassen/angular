@@ -34,7 +34,7 @@ export class BuildRetriever {
     const buildInfo = await this.api.getBuildInfo(buildNum);
     const githubInfo: GithubInfo = {
       org: buildInfo.username,
-      pr: getPrFromUrl(buildInfo.pull_requests.url),
+      pr: getPrFromUrl(buildInfo.pull_requests[0].url),
       repo: buildInfo.reponame,
       sha: buildInfo.vcs_revision,
       success: !buildInfo.failed,
