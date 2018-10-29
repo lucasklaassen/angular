@@ -64,7 +64,6 @@ export class PreviewServerFactory {
                                  buildCreator: BuildCreator, cfg: PreviewServerConfig): express.Express {
     const middleware = express();
     const jsonParser = bodyParser.json();
-    const significantFilesRe = new RegExp(cfg.significantFilesPattern);
 
     // RESPOND TO IS-ALIVE PING
     middleware.get(/^\/health-check\/?$/, (_req, res) => res.sendStatus(200));
