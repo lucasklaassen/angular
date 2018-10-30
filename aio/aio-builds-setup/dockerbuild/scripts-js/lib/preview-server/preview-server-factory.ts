@@ -1,5 +1,6 @@
 // Imports
 import * as bodyParser from 'body-parser';
+import * as cors from 'cors';
 import * as express from 'express';
 import * as http from 'http';
 import {AddressInfo} from 'net';
@@ -74,6 +75,8 @@ export class PreviewServerFactory {
                                  buildCreator: BuildCreator, cfg: PreviewServerConfig): express.Express {
     const middleware = express();
     const jsonParser = bodyParser.json();
+
+    middleware.use(cors());
 
     // RESPOND TO IS-ALIVE PING
     middleware.get(/^\/health-check\/?$/, (_req, res) => res.sendStatus(200));
