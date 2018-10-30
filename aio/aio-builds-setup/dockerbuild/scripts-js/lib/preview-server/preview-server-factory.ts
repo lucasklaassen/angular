@@ -122,12 +122,9 @@ export class PreviewServerFactory {
             logger.error('Auth0 request for token error', error);
             respondWithError(res, error);
           }
-          logger.warn(body);
-          const data = JSON.parse(body);
-          logger.warn(data);
           res.cookie(
             'auth0AccessToken',
-            data.access_token,
+            body.access_token,
             {
               domain: cfg.domainName,
               httpOnly: true,
