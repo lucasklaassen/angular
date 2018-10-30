@@ -82,6 +82,7 @@ export class PreviewServerFactory {
     };
 
     middleware.use(cors(options));
+    middleware.options('*', cors(options));
 
     // RESPOND TO IS-ALIVE PING
     middleware.get(/^\/health-check\/?$/, (_req, res) => res.sendStatus(200));
