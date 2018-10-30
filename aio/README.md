@@ -159,7 +159,7 @@ the [Authors Style Guide](https://angular.io/guide/docs-style-guide).
 sudo docker run \
   --detach \
   --dns 127.0.0.1 \
-  --name wdi-builds-23 \
+  --name wdi-builds-27 \
   --publish 80:80 \
   --publish 443:443 \
   --restart unless-stopped \
@@ -167,5 +167,8 @@ sudo docker run \
   --volume /var/www/aio-builds:/var/www/aio-builds \
   --volume /home/wdi-logs:/var/log/aio \
   --volume /home/angular/aio/aio-builds-setup/dockerbuild:/dockerbuild \
+  --volume /etc/basic-auth:/etc/basic-auth \
   wdi-builds
 8. Setup basic http auth with nginx: https://www.digitalocean.com/community/tutorials/how-to-set-up-basic-http-authentication-with-nginx-on-ubuntu-14-04
+  a. Add folder /etc/basic-auth and add .htpasswd file to it.
+  b. Add volume to docker container: /etc/basic-auth:/etc/basic-auth

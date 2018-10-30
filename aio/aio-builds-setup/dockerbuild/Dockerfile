@@ -70,6 +70,9 @@ ENV AIO_ARTIFACT_PATH=$AIO_ARTIFACT_PATH                          TEST_AIO_ARTIF
 # Create directory for logs
 RUN mkdir /var/log/aio
 
+# Create directory basic http auth creds
+RUN mkdir /etc/basic-auth
+
 
 # Add extra package sources
 RUN apt-get update -y && apt-get install -y curl
