@@ -70,10 +70,6 @@ ENV AIO_ARTIFACT_PATH=$AIO_ARTIFACT_PATH                          TEST_AIO_ARTIF
 # Create directory for logs
 RUN mkdir /var/log/aio
 
-# Create directory basic http auth creds
-RUN mkdir /etc/basic-auth
-
-
 # Add extra package sources
 RUN apt-get update -y && apt-get install -y curl
 RUN curl --silent --show-error --location https://deb.nodesource.com/setup_10.x | bash -
@@ -164,6 +160,9 @@ RUN chmod a+x $AIO_SCRIPTS_SH_DIR/*
 RUN find $AIO_SCRIPTS_SH_DIR -maxdepth 1 -type f -printf "%P\n" \
     | while read file; do ln -s $AIO_SCRIPTS_SH_DIR/$file /usr/local/bin/aio-${file%.*}; done
 
+
+# Create directory basic http auth creds
+RUN mkdir /etc/basic-auth
 
 # Set up the Node.js scripts
 COPY scripts-js/ $AIO_SCRIPTS_JS_DIR/
