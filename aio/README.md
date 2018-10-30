@@ -165,7 +165,7 @@ the [Authors Style Guide](https://angular.io/guide/docs-style-guide).
 sudo docker run \
   --detach \
   --dns 127.0.0.1 \
-  --name wdi-builds-50 \
+  --name wdi-builds-51 \
   --publish 80:80 \
   --publish 443:443 \
   --restart unless-stopped \
@@ -178,3 +178,4 @@ sudo docker run \
 8. Setup basic http auth with nginx: https://www.digitalocean.com/community/tutorials/how-to-set-up-basic-http-authentication-with-nginx-on-ubuntu-14-04
   a. Add folder /etc/basic-auth and add .htpasswd file to it.
   b. Add volume to docker container: /etc/basic-auth:/etc/basic-auth
+9. Gotta disable basic http auth for OPTIONS call in nginx (commits in forked branch)
