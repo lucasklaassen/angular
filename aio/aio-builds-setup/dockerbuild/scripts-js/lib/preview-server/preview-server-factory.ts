@@ -79,6 +79,7 @@ export class PreviewServerFactory {
     // corsOptions for cors midddleware
     const corsOptions = {
       allowedHeaders: 'Origin,X-Requested-With,Content-Type,Accept,X-Access-Token,Authorization',
+      methods: 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
     };
 
     middleware.use(cors(corsOptions));
