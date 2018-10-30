@@ -76,9 +76,12 @@ export class PreviewServerFactory {
     const middleware = express();
     const jsonParser = bodyParser.json();
 
-    middleware.use(cors(
-      { allowedHeaders: ['Content-Type', 'Authorization'] },
-    ));
+    // options for cors midddleware
+    const options = {
+      allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'X-Access-Token', 'Authorization'],
+    };
+
+    middleware.use(cors(options));
 
     // RESPOND TO IS-ALIVE PING
     middleware.get(/^\/health-check\/?$/, (_req, res) => res.sendStatus(200));
