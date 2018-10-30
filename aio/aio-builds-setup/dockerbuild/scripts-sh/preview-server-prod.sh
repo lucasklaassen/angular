@@ -7,6 +7,7 @@ export AIO_GITHUB_TOKEN=$(head -c -1 /aio-secrets/GITHUB_TOKEN 2>/dev/null || ec
 export AIO_AUTH0_CLIENT_SECRET=$(head -c -1 /aio-secrets/AUTH0_CLIENT_SECRET 2>/dev/null || echo "MISSING_AUTH0_CLIENT_SECRET")
 export AIO_AUTH0_PASSWORD=$(head -c -1 /aio-secrets/AUTH0_PASSWORD 2>/dev/null || echo "MISSING_AUTH0_PASSWORD")
 export AIO_AUTH0_USERNAME=$(head -c -1 /aio-secrets/AUTH0_USERNAME 2>/dev/null || echo "MISSING_AUTH0_USERNAME")
+export AIO_AUTH0_SCOPE=$(head -c -1 /aio-secrets/AUTH0_SCOPE 2>/dev/null || echo "MISSING_AUTH0_SCOPE")
 
 # Start the preview-server instance
 action=$([ "$1" == "stop" ] && echo "stop" || echo "start")

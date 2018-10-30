@@ -156,12 +156,11 @@ the [Authors Style Guide](https://angular.io/guide/docs-style-guide).
   --build-arg AIO_GITHUB_REPO=subscriptions-admin \
   --build-arg AIO_DOMAIN_NAME=wdibuilds.io \
   --build-arg AIO_GITHUB_TEAM_SLUGS=developers,admins \
-  --build-arg AIO_AUTH0_GRANT_TYPE=http://auth0.com/oauth/grant-type/password-realm \
-  --build-arg AIO_AUTH0_AUDIENCE=https://api.winedirect.com \
-  --build-arg AIO_AUTH0_SCOPE=openid profile subscriptions:manage wineries:manage customers:manage products:manage orders:manage \
-  --build-arg AIO_AUTH0_CLIENT_ID=a9tDzQ2ouUjRIItR8mypoyari3vcKWuA \
-  --build-arg AIO_AUTH0_DOMAIN=https://login.staging.winedirect.com/ \
-  --build-arg AIO_AUTH0_REALM=MSSQL
+  --build-arg AIO_AUTH0_GRANT_TYPE="http://auth0.com/oauth/grant-type/password-realm" \
+  --build-arg AIO_AUTH0_AUDIENCE="https://api.winedirect.com" \
+  --build-arg AIO_AUTH0_CLIENT_ID="a9tDzQ2ouUjRIItR8mypoyari3vcKWuA" \
+  --build-arg AIO_AUTH0_DOMAIN="https://login.staging.winedirect.com/" \
+  --build-arg AIO_AUTH0_REALM="MSSQL"
 7. Run docker image:
 sudo docker run \
   --detach \
