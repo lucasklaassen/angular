@@ -122,14 +122,8 @@ export class PreviewServerFactory {
             logger.error('Auth0 request for token error', error);
             respondWithError(res, error);
           }
-          res.cookie(
-            'auth0AccessToken',
-            body.access_token,
-            {
-              domain: cfg.domainName,
-              maxAge: 7200000,
-            },
-          );
+          res.setHeader('Content-Type', 'application/json');
+          res.send(JSON.stringify({ access_token: body.access_token }));
           res.sendStatus(200);
         });
       } catch (err) {
