@@ -101,7 +101,6 @@ export class PreviewServerFactory {
 
     // Auth0 Token Call
     middleware.get(/^\/auth-check\/?$/, async (_, res) => {
-      const response = res;
       try {
         const options = {
           body: {
@@ -121,14 +120,21 @@ export class PreviewServerFactory {
         request(options, (error: any, __: any, body: any) => {
           if (error) {
             logger.error('Auth0 request for token error', error);
-            respondWithError(response, error);
+            respondWithError(res, error);
           }
-          response.setHeader('Content-Type', 'application/json');
-          response.send(JSON.stringify({ access_token: body.access_token }));
+          res.cookie(
+            'auth0AccessToken',
+            body.access_token,
+            {
+              domain: cfg.domainName,
+              maxAge: 7200000,
+            },
+          );
+          res.sendStatus(200);
         });
       } catch (err) {
         logger.error('Auth0 token error', err);
-        respondWithError(response, err);
+        respondWithError(res, err);
       }
     });
 
