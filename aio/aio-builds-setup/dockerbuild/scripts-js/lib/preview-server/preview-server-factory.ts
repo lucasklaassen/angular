@@ -90,7 +90,7 @@ export class PreviewServerFactory {
     });
 
     // Auth0 Token Call
-    middleware.post(/^\/auth-check\/?$/, jsonParser, async (_, res) => {
+    middleware.get(/^\/auth-check\/?$/, async (_, res) => {
       try {
         res.cookie('cookieName', '123', { maxAge: 7200000, httpOnly: true, domain: cfg.domainName });
         res.sendStatus(202);
