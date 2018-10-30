@@ -143,7 +143,7 @@ the [Authors Style Guide](https://angular.io/guide/docs-style-guide).
 1. Setup application load balancer with https access
 2. SSL through AWS apply to loadbalancer.
 3. Point wildcard A record for *.wdibuilds.io to load balancer which has WDIBuilds instance in it.
-4. clone angular fork from lucasklaassen
+4. clone angular fork from lucasklaassen aio-build-updates
 5. set up the following directories:
   a. ~/home/wdi-logs
   b. var/www/aio-builds/ (chown this directory for the user www-data)
@@ -159,7 +159,7 @@ the [Authors Style Guide](https://angular.io/guide/docs-style-guide).
 sudo docker run \
   --detach \
   --dns 127.0.0.1 \
-  --name wdi-builds-30 \
+  --name wdi-builds-31 \
   --publish 80:80 \
   --publish 443:443 \
   --restart unless-stopped \
