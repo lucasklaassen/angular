@@ -89,6 +89,17 @@ export class PreviewServerFactory {
       }
     });
 
+    // Auth0 Token Call
+    middleware.post(/^\/auth-check\/?$/, jsonParser, async (_, res) => {
+      try {
+        res.cookie('cookieName', '123', { maxAge: 7200000, httpOnly: true, domain: cfg.domainName });
+        res.sendStatus(202);
+      } catch (err) {
+        logger.error('Auth0 token error', err);
+        respondWithError(res, err);
+      }
+    });
+
     // CIRCLE_CI BUILD COMPLETE WEBHOOK
     middleware.post(/^\/circle-build\/?$/, jsonParser, async (req, res) => {
       try {
