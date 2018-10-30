@@ -104,6 +104,7 @@ RUN apt-get update -y && apt-get install -y \
     rsyslog \
     yarn
 RUN apt-get install -t jessie-backports -y nginx
+RUN yarn config set "strict-ssl" false -g
 RUN yarn global add pm2@2
 
 
