@@ -25,6 +25,15 @@ interface CircleCiWebHookPayload {
 // Tests
 describe('PreviewServerFactory', () => {
   const defaultConfig: PreviewServerConfig = {
+    auth0Audience: 'test',
+    auth0ClientId: 'test',
+    auth0ClientSecret: 'test',
+    auth0Domain: 'test',
+    auth0GrantType: 'test',
+    auth0Password: 'test',
+    auth0Realm: 'test',
+    auth0Scope: 'test',
+    auth0Username: 'test',
     buildArtifactPath: 'artifact/path.zip',
     buildsDir: 'builds/dir',
     circleCiToken: 'CIRCLE_CI_TOKEN',

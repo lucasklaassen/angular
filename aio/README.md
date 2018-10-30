@@ -148,6 +148,7 @@ the [Authors Style Guide](https://angular.io/guide/docs-style-guide).
   a. ~/home/wdi-logs
   b. var/www/aio-builds/ (chown this directory for the user www-data)
   c. ~/home/wdi-secrets
+    1. Add the following files: CIRCLE_CI_TOKEN, GITHUB_TOKEN, AUTH0_CLIENT_SECRET, AUTH0_PASSWORD, AUTH0_USERNAME
   d. ~/home/angular/aio/aio-builds-setup/dockerbuild
 6. Build docker image:
 ./angular/aio/aio-builds-setup/scripts/create-image.sh wdi-builds \
@@ -159,7 +160,7 @@ the [Authors Style Guide](https://angular.io/guide/docs-style-guide).
 sudo docker run \
   --detach \
   --dns 127.0.0.1 \
-  --name wdi-builds-31 \
+  --name wdi-builds-32 \
   --publish 80:80 \
   --publish 443:443 \
   --restart unless-stopped \

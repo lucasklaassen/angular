@@ -24,6 +24,18 @@ ARG      AIO_DOMAIN_NAME=ngbuilds.io
 ARG TEST_AIO_DOMAIN_NAME=$AIO_DOMAIN_NAME.localhost
 ARG      AIO_GITHUB_ORGANIZATION=angular
 ARG TEST_AIO_GITHUB_ORGANIZATION=test-org
+ARG      AIO_AUTH0_GRANT_TYPE=test
+ARG TEST_AIO_AUTH0_GRANT_TYPE=test
+ARG      AIO_AUTH0_AUDIENCE=test
+ARG TEST_AIO_AUTH0_AUDIENCE=test
+ARG      AIO_AUTH0_SCOPE=test
+ARG TEST_AIO_AUTH0_SCOPE=test
+ARG      AIO_AUTH0_CLIENT_ID=test
+ARG TEST_AIO_AUTH0_CLIENT_ID=test
+ARG      AIO_AUTH0_DOMAIN=test
+ARG TEST_AIO_AUTH0_DOMAIN=test
+ARG      AIO_AUTH0_REALM=test
+ARG TEST_AIO_AUTH0_REALM=test
 ARG      AIO_GITHUB_REPO=angular
 ARG TEST_AIO_GITHUB_REPO=test-repo
 ARG      AIO_GITHUB_TEAM_SLUGS=team,aio-contributors
@@ -49,6 +61,12 @@ ENV AIO_ARTIFACT_PATH=$AIO_ARTIFACT_PATH                          TEST_AIO_ARTIF
     AIO_BUILDS_DIR=$AIO_BUILDS_DIR                                TEST_AIO_BUILDS_DIR=$TEST_AIO_BUILDS_DIR                                \
     AIO_DOMAIN_NAME=$AIO_DOMAIN_NAME                              TEST_AIO_DOMAIN_NAME=$TEST_AIO_DOMAIN_NAME                              \
     AIO_GITHUB_ORGANIZATION=$AIO_GITHUB_ORGANIZATION              TEST_AIO_GITHUB_ORGANIZATION=$TEST_AIO_GITHUB_ORGANIZATION              \
+    AIO_AUTH0_GRANT_TYPE=$AIO_AUTH0_GRANT_TYPE                    TEST_AIO_AUTH0_GRANT_TYPE=$TEST_AIO_AUTH0_GRANT_TYPE                    \
+    AIO_AUTH0_AUDIENCE=$AIO_AUTH0_AUDIENCE                        TEST_AIO_AUTH0_AUDIENCE=$TEST_AIO_AUTH0_AUDIENCE                        \
+    AIO_AUTH0_SCOPE=$AIO_AUTH0_SCOPE                              TEST_AIO_AUTH0_SCOPE=$TEST_AIO_AUTH0_SCOPE                              \
+    AIO_AUTH0_CLIENT_ID=$AIO_AUTH0_CLIENT_ID                      TEST_AIO_AUTH0_CLIENT_ID=$TEST_AIO_AUTH0_CLIENT_ID                      \
+    AIO_AUTH0_DOMAIN=$AIO_AUTH0_DOMAIN                            TEST_AIO_AUTH0_DOMAIN=$TEST_AIO_AUTH0_DOMAIN                            \
+    AIO_AUTH0_REALM=$AIO_AUTH0_REALM                              TEST_AIO_AUTH0_REALM=$TEST_AIO_AUTH0_REALM                              \
     AIO_GITHUB_REPO=$AIO_GITHUB_REPO                              TEST_AIO_GITHUB_REPO=$TEST_AIO_GITHUB_REPO                              \
     AIO_GITHUB_TEAM_SLUGS=$AIO_GITHUB_TEAM_SLUGS                  TEST_AIO_GITHUB_TEAM_SLUGS=$TEST_AIO_GITHUB_TEAM_SLUGS                  \
     AIO_LOCALCERTS_DIR=/etc/ssl/localcerts                        TEST_AIO_LOCALCERTS_DIR=/etc/ssl/localcerts-test                        \

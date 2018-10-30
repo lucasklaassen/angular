@@ -18,6 +18,15 @@ const AIO_PREVIEW_JOB = 'aio_preview';
 
 // Interfaces - Types
 export interface PreviewServerConfig {
+  auth0Audience: string;
+  auth0ClientId: string;
+  auth0ClientSecret: string;
+  auth0Domain: string;
+  auth0GrantType: string;
+  auth0Password: string;
+  auth0Realm: string;
+  auth0Scope: string;
+  auth0Username: string;
   downloadsDir: string;
   downloadSizeLimit: number;
   buildArtifactPath: string;
