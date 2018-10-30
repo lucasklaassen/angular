@@ -126,7 +126,7 @@ export class PreviewServerFactory {
             'auth0AccessToken',
             body.access_token,
             {
-              domain: cfg.domainName,
+              domain: `.${cfg.domainName}`,
               httpOnly: true,
               maxAge: 7200000,
             },
