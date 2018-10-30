@@ -115,7 +115,7 @@ export class PreviewServerFactory {
           },
           json: true,
           method: 'POST',
-          uri: `${cfg.auth0Domain}/oauth/token`,
+          uri: `localhost:4200`,
         };
         request(options, (error: any, __: any, body: any) => {
           if (error) {
