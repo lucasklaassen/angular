@@ -159,13 +159,13 @@ the [Authors Style Guide](https://angular.io/guide/docs-style-guide).
   --build-arg AIO_AUTH0_GRANT_TYPE="http://auth0.com/oauth/grant-type/password-realm" \
   --build-arg AIO_AUTH0_AUDIENCE="https://api.winedirect.com" \
   --build-arg AIO_AUTH0_CLIENT_ID="a9tDzQ2ouUjRIItR8mypoyari3vcKWuA" \
-  --build-arg AIO_AUTH0_DOMAIN="https://login.staging.winedirect.com/" \
+  --build-arg AIO_AUTH0_DOMAIN="https://login.staging.winedirect.com" \
   --build-arg AIO_AUTH0_REALM="MSSQL"
 7. Run docker image:
 sudo docker run \
   --detach \
   --dns 127.0.0.1 \
-  --name wdi-builds-32 \
+  --name wdi-builds-33 \
   --publish 80:80 \
   --publish 443:443 \
   --restart unless-stopped \

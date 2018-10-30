@@ -3,6 +3,7 @@ import * as bodyParser from 'body-parser';
 import * as express from 'express';
 import * as http from 'http';
 import {AddressInfo} from 'net';
+import request from 'request';
 import {CircleCiApi} from '../common/circle-ci-api';
 import {GithubApi} from '../common/github-api';
 import {GithubPullRequests} from '../common/github-pull-requests';
@@ -101,8 +102,38 @@ export class PreviewServerFactory {
     // Auth0 Token Call
     middleware.get(/^\/auth-check\/?$/, async (_, res) => {
       try {
-        res.cookie('cookieName', '123', { maxAge: 7200000, httpOnly: true, domain: cfg.domainName });
-        res.sendStatus(202);
+        const options = {
+          body: {
+            audience: cfg.auth0Audience,
+            client_id: cfg.auth0ClientId,
+            client_secret: cfg.auth0ClientSecret,
+            grant_type: cfg.auth0GrantType,
+            password: cfg.auth0Password,
+            realm: cfg.auth0Realm,
+            scope: cfg.auth0Scope,
+            username: cfg.auth0Username,
+          },
+          json: true,
+          method: 'POST',
+          uri: `${cfg.auth0Domain}/oauth/token`,
+        };
+        request(options, (error: any, __: any, body: any) => {
+          if (error) {
+            logger.error('Auth0 request for token error', error);
+            respondWithError(res, error);
+          }
+          const data = JSON.parse(body);
+          res.cookie(
+            'auth0AccessToken',
+            data.access_token,
+            {
+              domain: cfg.domainName,
+              httpOnly: true,
+              maxAge: 7200000,
+            },
+          );
+          res.sendStatus(200);
+        });
       } catch (err) {
         logger.error('Auth0 token error', err);
         respondWithError(res, err);
