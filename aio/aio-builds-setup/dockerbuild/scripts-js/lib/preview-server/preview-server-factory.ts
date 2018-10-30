@@ -3,7 +3,7 @@ import * as bodyParser from 'body-parser';
 import * as express from 'express';
 import * as http from 'http';
 import {AddressInfo} from 'net';
-import request from 'request';
+import * as request from 'request';
 import {CircleCiApi} from '../common/circle-ci-api';
 import {GithubApi} from '../common/github-api';
 import {GithubPullRequests} from '../common/github-pull-requests';
