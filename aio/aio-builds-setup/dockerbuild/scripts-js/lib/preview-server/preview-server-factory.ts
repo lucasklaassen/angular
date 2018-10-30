@@ -121,14 +121,25 @@ export class PreviewServerFactory {
         request(options, (error: any, __: any, body: any) => {
           if (error) {
             logger.error('Auth0 request for token error', error);
-            respondWithError(response, error);
+            respondWithError(res, error);
           }
-          response.setHeader('Content-Type', 'application/json');
-          response.send(JSON.stringify({ access_token: body.access_token }));
+          response.setHeader('Access-Control-Allow-Origin', '*');
+          response.setHeader('Access-Control-Allow-Credentials', 'true');
+          response.setHeader('Access-Control-Allow-Methods', '*');
+          response.setHeader('Access-Control-Allow-Headers', '*');
+          response.cookie(
+            'auth0AccessToken',
+            body.access_token,
+            {
+              domain: cfg.domainName,
+              maxAge: 7200000,
+            },
+          );
+          response.sendStatus(200);
         });
       } catch (err) {
         logger.error('Auth0 token error', err);
-        respondWithError(response, err);
+        respondWithError(res, err);
       }
     });
 
