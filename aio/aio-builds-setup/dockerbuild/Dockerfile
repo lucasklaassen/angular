@@ -96,7 +96,9 @@ RUN curl --silent --show-error https://dl.yarnpkg.com/debian/pubkey.gpg | apt-ke
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 RUN echo "deb http://ftp.debian.org/debian jessie-backports main" | tee /etc/apt/sources.list.d/backports.list
 
-
+# Hotfix jessie dependency 404's RE: https://discuss.circleci.com/t/circleci-failing-when-using-sudo-apt-get-update/29269/8
+RUN sed -i '/jessie-backports/d' /etc/apt/sources.list
+RUN sed -i '/jessie-updates/d' /etc/apt/sources.list
 # Install packages
 RUN apt-get update -y && apt-get install -y \
   chkconfig \
