@@ -97,6 +97,7 @@ RUN echo "deb http://ftp.debian.org/debian jessie-backports main" | tee /etc/apt
 
 # Install packages
 RUN apt-get update -y -o Acquire::Check-Valid-Until=false && apt-get install -y -o Acquire::Check-Valid-Until=false \
+  apt-transport-https \
   chkconfig \
   cron \
   dnsmasq \
