@@ -85,9 +85,11 @@ ENV AIO_ARTIFACT_PATH=$AIO_ARTIFACT_PATH                          TEST_AIO_ARTIF
 # Create directory for logs
 RUN mkdir /var/log/aio
 
-# Hotfix jessie dependency 404's RE: https://discuss.circleci.com/t/circleci-failing-when-using-sudo-apt-get-update/29269/8
-RUN sed -i '/jessie-backports/d' /etc/apt/sources.list
-RUN sed -i '/jessie-updates/d' /etc/apt/sources.list
+# Hotfix jessie dependency 404's RE: https://unix.stackexchange.com/questions/508724/failed-to-fetch-jessie-backports-repository
+RUN echo "deb [check-valid-until=no] http://cdn-fastly.deb.debian.org/debian jessie main" > /etc/apt/sources.list.d/jessie.list
+RUN echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/jessie-backports.list
+RUN sed -i '/deb http:\/\/deb.debian.org\/debian jessie-updates main/d' /etc/apt/sources.list
+RUN apt-get -o Acquire::Check-Valid-Until=false update
 
 # Add extra package sources
 RUN apt-get update -y && apt-get install -y curl
@@ -96,9 +98,6 @@ RUN curl --silent --show-error https://dl.yarnpkg.com/debian/pubkey.gpg | apt-ke
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 RUN echo "deb http://ftp.debian.org/debian jessie-backports main" | tee /etc/apt/sources.list.d/backports.list
 
-# Hotfix jessie dependency 404's RE: https://discuss.circleci.com/t/circleci-failing-when-using-sudo-apt-get-update/29269/8
-RUN sed -i '/jessie-backports/d' /etc/apt/sources.list
-RUN sed -i '/jessie-updates/d' /etc/apt/sources.list
 # Install packages
 RUN apt-get update -y && apt-get install -y \
   chkconfig \
