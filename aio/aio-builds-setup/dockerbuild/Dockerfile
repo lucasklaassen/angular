@@ -86,22 +86,21 @@ ENV AIO_ARTIFACT_PATH=$AIO_ARTIFACT_PATH                          TEST_AIO_ARTIF
 RUN mkdir /var/log/aio
 
 # Hotfix jessie dependency 404's RE: https://unix.stackexchange.com/questions/508724/failed-to-fetch-jessie-backports-repository
-
-RUN echo "deb [check-valid-until=no] http://cdn-fastly.deb.debian.org/debian jessie main" > /etc/apt/sources.list.d/jessie.list
 RUN echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/jessie-backports.list
-RUN echo "deb http://archive.debian.org/debian/ jessie-backports main contrib non-free" > /etc/apt/sources.list
-RUN echo "deb-src http://archive.debian.org/debian/ jessie-backports main contrib non-free" > /etc/apt/sources.list
+
+# As suggested by a user, for some people this line works instead of the first one. Use whichever works for your case
+# RUN echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie main" > /etc/apt/sources.list.d/jessie.list
 RUN sed -i '/deb http:\/\/deb.debian.org\/debian jessie-updates main/d' /etc/apt/sources.list
-RUN sed -i '/jessie-backports/d' /etc/apt/sources.list
-RUN sed -i '/jessie-updates/d' /etc/apt/sources.list
-RUN echo 'Acquire::Check-Valid-Until no;' > /etc/apt/apt.conf.d/99no-check-valid-until
+
+RUN apt-get -o Acquire::Check-Valid-Until=false update -y
 
 # Add extra package sources
-RUN apt-get update -y -o Acquire::Check-Valid-Until=false && apt-get install -y curl -o Acquire::Check-Valid-Until=false
+RUN apt-get install -y curl -o Acquire::Check-Valid-Until=false
 
 # Install packages
 RUN apt-get install apt-transport-https ca-certificates -o Acquire::Check-Valid-Until=false -y
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 
 RUN apt-get -o Acquire::Check-Valid-Until=false update -y && apt-get install -y -o Acquire::Check-Valid-Until=false \
   chkconfig \
