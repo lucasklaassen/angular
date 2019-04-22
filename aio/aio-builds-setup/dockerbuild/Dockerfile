@@ -91,14 +91,14 @@ RUN echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie-bac
 RUN sed -i '/deb http:\/\/deb.debian.org\/debian jessie-updates main/d' /etc/apt/sources.list
 
 # Add extra package sources
-RUN apt-get update -y -o Acquire::Check-Valid-Until=false update && apt-get install -y curl -o Acquire::Check-Valid-Until=false update
+RUN apt-get update -y -o Acquire::Check-Valid-Until=false && apt-get install -y curl -o Acquire::Check-Valid-Until=false
 RUN curl --silent --show-error --location https://deb.nodesource.com/setup_10.x | bash -
 RUN curl --silent --show-error https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 RUN echo "deb http://ftp.debian.org/debian jessie-backports main" | tee /etc/apt/sources.list.d/backports.list
 
 # Install packages
-RUN apt-get update -y -o Acquire::Check-Valid-Until=false update && apt-get install -y -o Acquire::Check-Valid-Until=false update \
+RUN apt-get update -y -o Acquire::Check-Valid-Until=false && apt-get install -y -o Acquire::Check-Valid-Until=false \
   chkconfig \
   cron \
   dnsmasq \
@@ -107,7 +107,7 @@ RUN apt-get update -y -o Acquire::Check-Valid-Until=false update && apt-get inst
   openssl \
   rsyslog \
   yarn
-RUN apt-get install -t jessie-backports -y nginx -o Acquire::Check-Valid-Until=false update
+RUN apt-get install -t jessie-backports -y nginx -o Acquire::Check-Valid-Until=false
 RUN yarn config set "strict-ssl" false -g
 RUN yarn global add pm2@2
 
