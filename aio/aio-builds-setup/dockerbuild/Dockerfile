@@ -97,7 +97,7 @@ RUN echo "deb http://ftp.debian.org/debian jessie-backports main" | tee /etc/apt
 
 # Install packages
 RUN apt-get install apt-transport-https ca-certificates -o Acquire::Check-Valid-Until=false -y
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 RUN apt-get -o Acquire::Check-Valid-Until=false update -y && apt-get install -y -o Acquire::Check-Valid-Until=false \
   chkconfig \
   cron \
