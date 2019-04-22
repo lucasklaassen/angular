@@ -87,6 +87,7 @@ RUN mkdir /var/log/aio
 
 # Hotfix jessie dependency 404's RE: https://unix.stackexchange.com/questions/508724/failed-to-fetch-jessie-backports-repository
 RUN echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/jessie-backports.list
+RUN echo 'Acquire::Check-Valid-Until no;' > /etc/apt/apt.conf.d/99no-check-valid-until
 
 # As suggested by a user, for some people this line works instead of the first one. Use whichever works for your case
 # RUN echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie main" > /etc/apt/sources.list.d/jessie.list
