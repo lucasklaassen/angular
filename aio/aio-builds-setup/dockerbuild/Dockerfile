@@ -98,8 +98,6 @@ RUN echo 'Acquire::Check-Valid-Until no;' > /etc/apt/apt.conf.d/99no-check-valid
 
 # Add extra package sources
 RUN apt-get update -y -o Acquire::Check-Valid-Until=false && apt-get install -y curl -o Acquire::Check-Valid-Until=false
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-RUN echo "deb http://ftp.debian.org/debian jessie-backports main" | tee /etc/apt/sources.list.d/backports.list
 
 # Install packages
 RUN apt-get install apt-transport-https ca-certificates -o Acquire::Check-Valid-Until=false -y
