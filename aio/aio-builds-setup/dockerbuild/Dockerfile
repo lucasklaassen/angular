@@ -89,8 +89,8 @@ RUN mkdir /var/log/aio
 RUN echo "deb [check-valid-until=no] http://cdn-fastly.deb.debian.org/debian jessie main" > /etc/apt/sources.list.d/jessie.list
 RUN echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/jessie-backports.list
 RUN sed -i '/deb http:\/\/deb.debian.org\/debian jessie-updates main/d' /etc/apt/sources.list
-RUN sudo sed -i '/jessie-backports/d' /etc/apt/sources.list
-RUN sudo sed -i '/jessie-updates/d' /etc/apt/sources.list
+RUN sed -i '/jessie-backports/d' /etc/apt/sources.list
+RUN sed -i '/jessie-updates/d' /etc/apt/sources.list
 
 # Add extra package sources
 RUN apt-get update -y -o Acquire::Check-Valid-Until=false && apt-get install -y curl -o Acquire::Check-Valid-Until=false
