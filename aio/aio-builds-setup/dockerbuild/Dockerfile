@@ -107,12 +107,18 @@ RUN apt-get -o Acquire::Check-Valid-Until=false update -y && apt-get install -y 
   cron \
   dnsmasq \
   nano \
-  nodejs \
   openssl \
   rsyslog
-RUN apt-get install -y yarn -o Acquire::Check-Valid-Until=false
+RUN apt-get remove node
+RUN apt-get remove yarn
+
+RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+RUN  apt-get install -y nodejs
+
+RUN curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+RUN apt-get update && sudo apt-get install yarn
 RUN apt-get install -t jessie-backports -y nginx -o Acquire::Check-Valid-Until=false
-RUN apt-get -o Acquire::Check-Valid-Until=false update -y
 RUN yarn config set "strict-ssl" false -g
 RUN yarn global add pm2@2
 
