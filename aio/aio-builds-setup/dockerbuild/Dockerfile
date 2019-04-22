@@ -2,9 +2,9 @@
 FROM debian:jessie
 
 LABEL name="angular.io PR preview" \
-      description="This image implements the PR preview functionality for angular.io." \
-      vendor="Angular" \
-      version="1.0"
+  description="This image implements the PR preview functionality for angular.io." \
+  vendor="Angular" \
+  version="1.0"
 
 VOLUME /aio-secrets
 VOLUME /var/www/aio-builds
@@ -56,34 +56,38 @@ ARG      AIO_PREVIEW_SERVER_PORT=3000
 ARG TEST_AIO_PREVIEW_SERVER_PORT=3001
 
 ENV AIO_ARTIFACT_PATH=$AIO_ARTIFACT_PATH                          TEST_AIO_ARTIFACT_PATH=$TEST_AIO_ARTIFACT_PATH                          \
-    AIO_BUILDS_DIR=$AIO_BUILDS_DIR                                TEST_AIO_BUILDS_DIR=$TEST_AIO_BUILDS_DIR                                \
-    AIO_DOMAIN_NAME=$AIO_DOMAIN_NAME                              TEST_AIO_DOMAIN_NAME=$TEST_AIO_DOMAIN_NAME                              \
-    AIO_GITHUB_ORGANIZATION=$AIO_GITHUB_ORGANIZATION              TEST_AIO_GITHUB_ORGANIZATION=$TEST_AIO_GITHUB_ORGANIZATION              \
-    AIO_AUTH0_GRANT_TYPE=$AIO_AUTH0_GRANT_TYPE                    TEST_AIO_AUTH0_GRANT_TYPE=$TEST_AIO_AUTH0_GRANT_TYPE                    \
-    AIO_AUTH0_AUDIENCE=$AIO_AUTH0_AUDIENCE                        TEST_AIO_AUTH0_AUDIENCE=$TEST_AIO_AUTH0_AUDIENCE                        \
-    AIO_AUTH0_CLIENT_ID=$AIO_AUTH0_CLIENT_ID                      TEST_AIO_AUTH0_CLIENT_ID=$TEST_AIO_AUTH0_CLIENT_ID                      \
-    AIO_AUTH0_DOMAIN=$AIO_AUTH0_DOMAIN                            TEST_AIO_AUTH0_DOMAIN=$TEST_AIO_AUTH0_DOMAIN                            \
-    AIO_AUTH0_REALM=$AIO_AUTH0_REALM                              TEST_AIO_AUTH0_REALM=$TEST_AIO_AUTH0_REALM                              \
-    AIO_GITHUB_REPO=$AIO_GITHUB_REPO                              TEST_AIO_GITHUB_REPO=$TEST_AIO_GITHUB_REPO                              \
-    AIO_GITHUB_TEAM_SLUGS=$AIO_GITHUB_TEAM_SLUGS                  TEST_AIO_GITHUB_TEAM_SLUGS=$TEST_AIO_GITHUB_TEAM_SLUGS                  \
-    AIO_LOCALCERTS_DIR=/etc/ssl/localcerts                        TEST_AIO_LOCALCERTS_DIR=/etc/ssl/localcerts-test                        \
-    AIO_NGINX_HOSTNAME=$AIO_NGINX_HOSTNAME                        TEST_AIO_NGINX_HOSTNAME=$TEST_AIO_NGINX_HOSTNAME                        \
-    AIO_NGINX_LOGS_DIR=/var/log/aio/nginx                         TEST_AIO_NGINX_LOGS_DIR=/var/log/aio/nginx-test                         \
-    AIO_NGINX_PORT_HTTP=$AIO_NGINX_PORT_HTTP                      TEST_AIO_NGINX_PORT_HTTP=$TEST_AIO_NGINX_PORT_HTTP                      \
-    AIO_NGINX_PORT_HTTPS=$AIO_NGINX_PORT_HTTPS                    TEST_AIO_NGINX_PORT_HTTPS=$TEST_AIO_NGINX_PORT_HTTPS                    \
-    AIO_SCRIPTS_JS_DIR=/usr/share/aio-scripts-js                                                                                          \
-    AIO_SCRIPTS_SH_DIR=/usr/share/aio-scripts-sh                                                                                          \
-    AIO_SIGNIFICANT_FILES_PATTERN=$AIO_SIGNIFICANT_FILES_PATTERN  TEST_AIO_SIGNIFICANT_FILES_PATTERN=$TEST_AIO_SIGNIFICANT_FILES_PATTERN  \
-    AIO_TRUSTED_PR_LABEL=$AIO_TRUSTED_PR_LABEL                    TEST_AIO_TRUSTED_PR_LABEL=$TEST_AIO_TRUSTED_PR_LABEL                    \
-    AIO_PREVIEW_SERVER_HOSTNAME=$AIO_PREVIEW_SERVER_HOSTNAME                      TEST_AIO_PREVIEW_SERVER_HOSTNAME=$TEST_AIO_PREVIEW_SERVER_HOSTNAME                      \
-    AIO_ARTIFACT_MAX_SIZE=$AIO_ARTIFACT_MAX_SIZE                      TEST_AIO_ARTIFACT_MAX_SIZE=$TEST_AIO_ARTIFACT_MAX_SIZE                      \
-    AIO_PREVIEW_SERVER_PORT=$AIO_PREVIEW_SERVER_PORT                              TEST_AIO_PREVIEW_SERVER_PORT=$TEST_AIO_PREVIEW_SERVER_PORT                              \
-    AIO_WWW_USER=www-data                                                                                                                 \
-    NODE_ENV=production
+  AIO_BUILDS_DIR=$AIO_BUILDS_DIR                                TEST_AIO_BUILDS_DIR=$TEST_AIO_BUILDS_DIR                                \
+  AIO_DOMAIN_NAME=$AIO_DOMAIN_NAME                              TEST_AIO_DOMAIN_NAME=$TEST_AIO_DOMAIN_NAME                              \
+  AIO_GITHUB_ORGANIZATION=$AIO_GITHUB_ORGANIZATION              TEST_AIO_GITHUB_ORGANIZATION=$TEST_AIO_GITHUB_ORGANIZATION              \
+  AIO_AUTH0_GRANT_TYPE=$AIO_AUTH0_GRANT_TYPE                    TEST_AIO_AUTH0_GRANT_TYPE=$TEST_AIO_AUTH0_GRANT_TYPE                    \
+  AIO_AUTH0_AUDIENCE=$AIO_AUTH0_AUDIENCE                        TEST_AIO_AUTH0_AUDIENCE=$TEST_AIO_AUTH0_AUDIENCE                        \
+  AIO_AUTH0_CLIENT_ID=$AIO_AUTH0_CLIENT_ID                      TEST_AIO_AUTH0_CLIENT_ID=$TEST_AIO_AUTH0_CLIENT_ID                      \
+  AIO_AUTH0_DOMAIN=$AIO_AUTH0_DOMAIN                            TEST_AIO_AUTH0_DOMAIN=$TEST_AIO_AUTH0_DOMAIN                            \
+  AIO_AUTH0_REALM=$AIO_AUTH0_REALM                              TEST_AIO_AUTH0_REALM=$TEST_AIO_AUTH0_REALM                              \
+  AIO_GITHUB_REPO=$AIO_GITHUB_REPO                              TEST_AIO_GITHUB_REPO=$TEST_AIO_GITHUB_REPO                              \
+  AIO_GITHUB_TEAM_SLUGS=$AIO_GITHUB_TEAM_SLUGS                  TEST_AIO_GITHUB_TEAM_SLUGS=$TEST_AIO_GITHUB_TEAM_SLUGS                  \
+  AIO_LOCALCERTS_DIR=/etc/ssl/localcerts                        TEST_AIO_LOCALCERTS_DIR=/etc/ssl/localcerts-test                        \
+  AIO_NGINX_HOSTNAME=$AIO_NGINX_HOSTNAME                        TEST_AIO_NGINX_HOSTNAME=$TEST_AIO_NGINX_HOSTNAME                        \
+  AIO_NGINX_LOGS_DIR=/var/log/aio/nginx                         TEST_AIO_NGINX_LOGS_DIR=/var/log/aio/nginx-test                         \
+  AIO_NGINX_PORT_HTTP=$AIO_NGINX_PORT_HTTP                      TEST_AIO_NGINX_PORT_HTTP=$TEST_AIO_NGINX_PORT_HTTP                      \
+  AIO_NGINX_PORT_HTTPS=$AIO_NGINX_PORT_HTTPS                    TEST_AIO_NGINX_PORT_HTTPS=$TEST_AIO_NGINX_PORT_HTTPS                    \
+  AIO_SCRIPTS_JS_DIR=/usr/share/aio-scripts-js                                                                                          \
+  AIO_SCRIPTS_SH_DIR=/usr/share/aio-scripts-sh                                                                                          \
+  AIO_SIGNIFICANT_FILES_PATTERN=$AIO_SIGNIFICANT_FILES_PATTERN  TEST_AIO_SIGNIFICANT_FILES_PATTERN=$TEST_AIO_SIGNIFICANT_FILES_PATTERN  \
+  AIO_TRUSTED_PR_LABEL=$AIO_TRUSTED_PR_LABEL                    TEST_AIO_TRUSTED_PR_LABEL=$TEST_AIO_TRUSTED_PR_LABEL                    \
+  AIO_PREVIEW_SERVER_HOSTNAME=$AIO_PREVIEW_SERVER_HOSTNAME                      TEST_AIO_PREVIEW_SERVER_HOSTNAME=$TEST_AIO_PREVIEW_SERVER_HOSTNAME                      \
+  AIO_ARTIFACT_MAX_SIZE=$AIO_ARTIFACT_MAX_SIZE                      TEST_AIO_ARTIFACT_MAX_SIZE=$TEST_AIO_ARTIFACT_MAX_SIZE                      \
+  AIO_PREVIEW_SERVER_PORT=$AIO_PREVIEW_SERVER_PORT                              TEST_AIO_PREVIEW_SERVER_PORT=$TEST_AIO_PREVIEW_SERVER_PORT                              \
+  AIO_WWW_USER=www-data                                                                                                                 \
+  NODE_ENV=production
 
 
 # Create directory for logs
 RUN mkdir /var/log/aio
+
+# Hotfix jessie dependency 404's RE: https://discuss.circleci.com/t/circleci-failing-when-using-sudo-apt-get-update/29269/8
+RUN sed -i '/jessie-backports/d' /etc/apt/sources.list
+RUN sed -i '/jessie-updates/d' /etc/apt/sources.list
 
 # Add extra package sources
 RUN apt-get update -y && apt-get install -y curl
@@ -95,14 +99,14 @@ RUN echo "deb http://ftp.debian.org/debian jessie-backports main" | tee /etc/apt
 
 # Install packages
 RUN apt-get update -y && apt-get install -y \
-    chkconfig \
-    cron \
-    dnsmasq \
-    nano \
-    nodejs \
-    openssl \
-    rsyslog \
-    yarn
+  chkconfig \
+  cron \
+  dnsmasq \
+  nano \
+  nodejs \
+  openssl \
+  rsyslog \
+  yarn
 RUN apt-get install -t jessie-backports -y nginx
 RUN yarn config set "strict-ssl" false -g
 RUN yarn global add pm2@2
@@ -174,7 +178,7 @@ RUN chkconfig pm2-root on
 COPY scripts-sh/ $AIO_SCRIPTS_SH_DIR/
 RUN chmod a+x $AIO_SCRIPTS_SH_DIR/*
 RUN find $AIO_SCRIPTS_SH_DIR -maxdepth 1 -type f -printf "%P\n" \
-    | while read file; do ln -s $AIO_SCRIPTS_SH_DIR/$file /usr/local/bin/aio-${file%.*}; done
+  | while read file; do ln -s $AIO_SCRIPTS_SH_DIR/$file /usr/local/bin/aio-${file%.*}; done
 
 
 # Create directory basic http auth creds
