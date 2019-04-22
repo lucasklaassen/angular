@@ -112,6 +112,7 @@ RUN apt-get -o Acquire::Check-Valid-Until=false update -y && apt-get install -y 
   rsyslog
 RUN apt-get install -y yarn -o Acquire::Check-Valid-Until=false
 RUN apt-get install -t jessie-backports -y nginx -o Acquire::Check-Valid-Until=false
+RUN apt-get -o Acquire::Check-Valid-Until=false update -y
 RUN yarn config set "strict-ssl" false -g
 RUN yarn global add pm2@2
 
