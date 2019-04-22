@@ -96,8 +96,8 @@ RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources
 RUN echo "deb http://ftp.debian.org/debian jessie-backports main" | tee /etc/apt/sources.list.d/backports.list
 
 # Install packages
-RUN apt-get update -y -o Acquire::Check-Valid-Until=false && apt-get install -y -o Acquire::Check-Valid-Until=false \
-  apt-transport-https \
+RUN apt-get install apt-transport-https ca-certificates -o Acquire::Check-Valid-Until=false
+RUN apt-get update -y && apt-get install -y -o Acquire::Check-Valid-Until=false \
   chkconfig \
   cron \
   dnsmasq \
