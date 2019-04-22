@@ -85,16 +85,24 @@ ENV AIO_ARTIFACT_PATH=$AIO_ARTIFACT_PATH                          TEST_AIO_ARTIF
 # Create directory for logs
 RUN mkdir /var/log/aio
 
+# Hotfix jessie dependency 404's RE: https://unix.stackexchange.com/questions/508724/failed-to-fetch-jessie-backports-repository
+RUN echo "deb [check-valid-until=no] http://cdn-fastly.deb.debian.org/debian jessie main" > /etc/apt/sources.list.d/jessie.list
+RUN echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/jessie-backports.list
+RUN sed -i '/deb http:\/\/deb.debian.org\/debian jessie-updates main/d' /etc/apt/sources.list
+RUN sed -i '/jessie-backports/d' /etc/apt/sources.list
+RUN sed -i '/jessie-updates/d' /etc/apt/sources.list
+RUN echo 'Acquire::Check-Valid-Until no;' > /etc/apt/apt.conf.d/99no-check-valid-until
+
 # Add extra package sources
-RUN apt-get update -y && apt-get install -y curl
-RUN curl --silent --show-error --location https://deb.nodesource.com/setup_10.x | bash -
-RUN curl --silent --show-error https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN apt-get update -y -o Acquire::Check-Valid-Until=false && apt-get install -y curl -o Acquire::Check-Valid-Until=false
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 RUN echo "deb http://ftp.debian.org/debian jessie-backports main" | tee /etc/apt/sources.list.d/backports.list
 
-
 # Install packages
-RUN apt-get update -y && apt-get install -y \
+RUN apt-get install apt-transport-https ca-certificates -o Acquire::Check-Valid-Until=false -y
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+
+RUN apt-get -o Acquire::Check-Valid-Until=false update -y && apt-get install -y -o Acquire::Check-Valid-Until=false \
   chkconfig \
   cron \
   dnsmasq \
@@ -103,7 +111,8 @@ RUN apt-get update -y && apt-get install -y \
   openssl \
   rsyslog \
   yarn
-RUN apt-get install -t jessie-backports -y nginx
+RUN apt-get install -t jessie-backports -y nginx -o Acquire::Check-Valid-Until=false
+RUN yarn config set "strict-ssl" false -g
 RUN yarn global add pm2@2
 
 
