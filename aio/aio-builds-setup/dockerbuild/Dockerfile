@@ -86,8 +86,11 @@ ENV AIO_ARTIFACT_PATH=$AIO_ARTIFACT_PATH                          TEST_AIO_ARTIF
 RUN mkdir /var/log/aio
 
 # Hotfix jessie dependency 404's RE: https://unix.stackexchange.com/questions/508724/failed-to-fetch-jessie-backports-repository
+
 RUN echo "deb [check-valid-until=no] http://cdn-fastly.deb.debian.org/debian jessie main" > /etc/apt/sources.list.d/jessie.list
 RUN echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/jessie-backports.list
+RUN deb http://archive.debian.org/debian/ jessie-backports main contrib non-free
+RUN deb-src http://archive.debian.org/debian/ jessie-backports main contrib non-free
 RUN sed -i '/deb http:\/\/deb.debian.org\/debian jessie-updates main/d' /etc/apt/sources.list
 RUN sed -i '/jessie-backports/d' /etc/apt/sources.list
 RUN sed -i '/jessie-updates/d' /etc/apt/sources.list
