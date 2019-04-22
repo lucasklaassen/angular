@@ -99,8 +99,6 @@ RUN apt-get install -y curl -o Acquire::Check-Valid-Until=false
 
 # Install packages
 RUN apt-get install apt-transport-https ca-certificates -o Acquire::Check-Valid-Until=false -y
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 
 RUN apt-get -o Acquire::Check-Valid-Until=false update -y && apt-get install -y -o Acquire::Check-Valid-Until=false \
   chkconfig \
@@ -109,8 +107,8 @@ RUN apt-get -o Acquire::Check-Valid-Until=false update -y && apt-get install -y 
   nano \
   nodejs \
   openssl \
-  rsyslog \
-  yarn
+  rsyslog
+RUN npm install -g yarnpkg
 RUN apt-get install -t jessie-backports -y nginx -o Acquire::Check-Valid-Until=false
 RUN yarn config set "strict-ssl" false -g
 RUN yarn global add pm2@2
