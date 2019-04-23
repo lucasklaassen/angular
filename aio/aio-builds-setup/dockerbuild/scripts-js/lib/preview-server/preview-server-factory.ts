@@ -168,6 +168,7 @@ export class PreviewServerFactory {
           uri: `${cfg.auth0Domain}/oauth/token`
         };
         request(options, (error: any, __: any, body: any) => {
+          logger.error("Auth0 response", JSON.stringify(body));
           if (error) {
             logger.error("Auth0 request for token error", error);
             respondWithError(res, error);
