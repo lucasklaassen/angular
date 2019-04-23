@@ -167,7 +167,7 @@ yarn serve-and-sync
    sudo docker run \
     --detach \
     --dns 127.0.0.1 \
-    --name wdi-builds-201 \
+    --name wdi-builds-300 \
     --publish 80:80 \
     --publish 443:443 \
     --restart unless-stopped \

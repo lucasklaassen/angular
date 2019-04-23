@@ -1,22 +1,22 @@
 // Imports
-import * as bodyParser from 'body-parser';
-import * as cors from 'cors';
-import * as express from 'express';
-import * as http from 'http';
-import {AddressInfo} from 'net';
-import * as request from 'request';
-import {CircleCiApi} from '../common/circle-ci-api';
-import {GithubApi} from '../common/github-api';
-import {GithubPullRequests} from '../common/github-pull-requests';
-import {GithubTeams} from '../common/github-teams';
-import {assert, assertNotMissingOrEmpty, Logger} from '../common/utils';
-import {BuildCreator} from './build-creator';
-import {ChangedPrVisibilityEvent, CreatedBuildEvent} from './build-events';
-import {BuildRetriever} from './build-retriever';
-import {BuildVerifier} from './build-verifier';
-import {respondWithError, throwRequestError} from './utils';
+import * as bodyParser from "body-parser";
+import * as cors from "cors";
+import * as express from "express";
+import * as http from "http";
+import { AddressInfo } from "net";
+import * as request from "request";
+import { CircleCiApi } from "../common/circle-ci-api";
+import { GithubApi } from "../common/github-api";
+import { GithubPullRequests } from "../common/github-pull-requests";
+import { GithubTeams } from "../common/github-teams";
+import { assert, assertNotMissingOrEmpty, Logger } from "../common/utils";
+import { BuildCreator } from "./build-creator";
+import { ChangedPrVisibilityEvent, CreatedBuildEvent } from "./build-events";
+import { BuildRetriever } from "./build-retriever";
+import { BuildVerifier } from "./build-verifier";
+import { respondWithError, throwRequestError } from "./utils";
 
-const AIO_PREVIEW_JOB = 'aio_preview';
+const AIO_PREVIEW_JOB = "aio_preview";
 
 // Interfaces - Types
 export interface PreviewServerConfig {
@@ -43,47 +43,80 @@ export interface PreviewServerConfig {
   trustedPrLabel: string;
 }
 
-const logger = new Logger('PreviewServer');
+const logger = new Logger("PreviewServer");
 
 // Classes
 export class PreviewServerFactory {
   // Methods - Public
   public static create(cfg: PreviewServerConfig): http.Server {
-    assertNotMissingOrEmpty('domainName', cfg.domainName);
+    assertNotMissingOrEmpty("domainName", cfg.domainName);
 
-    const circleCiApi = new CircleCiApi(cfg.githubOrg, cfg.githubRepo, cfg.circleCiToken);
+    const circleCiApi = new CircleCiApi(
+      cfg.githubOrg,
+      cfg.githubRepo,
+      cfg.circleCiToken
+    );
     const githubApi = new GithubApi(cfg.githubToken);
-    const prs = new GithubPullRequests(githubApi, cfg.githubOrg, cfg.githubRepo);
+    const prs = new GithubPullRequests(
+      githubApi,
+      cfg.githubOrg,
+      cfg.githubRepo
+    );
     const teams = new GithubTeams(githubApi, cfg.githubOrg);
 
-    const buildRetriever = new BuildRetriever(circleCiApi, cfg.downloadSizeLimit, cfg.downloadsDir);
-    const buildVerifier = new BuildVerifier(prs, teams, cfg.githubTeamSlugs, cfg.trustedPrLabel);
-    const buildCreator = PreviewServerFactory.createBuildCreator(prs, cfg.buildsDir, cfg.domainName);
+    const buildRetriever = new BuildRetriever(
+      circleCiApi,
+      cfg.downloadSizeLimit,
+      cfg.downloadsDir
+    );
+    const buildVerifier = new BuildVerifier(
+      prs,
+      teams,
+      cfg.githubTeamSlugs,
+      cfg.trustedPrLabel
+    );
+    const buildCreator = PreviewServerFactory.createBuildCreator(
+      prs,
+      cfg.buildsDir,
+      cfg.domainName
+    );
 
-    const middleware = PreviewServerFactory.createMiddleware(buildRetriever, buildVerifier, buildCreator, cfg);
+    const middleware = PreviewServerFactory.createMiddleware(
+      buildRetriever,
+      buildVerifier,
+      buildCreator,
+      cfg
+    );
     const httpServer = http.createServer(middleware as any);
 
-    httpServer.on('listening', () => {
+    httpServer.on("listening", () => {
       const info = httpServer.address() as AddressInfo;
-      logger.info(`Up and running (and listening on ${info.address}:${info.port})...`);
+      logger.info(
+        `Up and running (and listening on ${info.address}:${info.port})...`
+      );
     });
 
     return httpServer;
   }
 
-  public static createMiddleware(buildRetriever: BuildRetriever, buildVerifier: BuildVerifier,
-                                 buildCreator: BuildCreator, cfg: PreviewServerConfig): express.Express {
+  public static createMiddleware(
+    buildRetriever: BuildRetriever,
+    buildVerifier: BuildVerifier,
+    buildCreator: BuildCreator,
+    cfg: PreviewServerConfig
+  ): express.Express {
     const middleware = express();
     const jsonParser = bodyParser.json();
 
     // corsOptions for cors midddleware
     const corsOptions = {
-      allowedHeaders: 'Origin,X-Requested-With,Content-Type,Accept,X-Access-Token,Authorization',
-      methods: 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+      allowedHeaders:
+        "Origin,X-Requested-With,Content-Type,Accept,X-Access-Token,Authorization",
+      methods: "GET,PUT,POST,DELETE,PATCH,OPTIONS"
     };
 
     middleware.use(cors(corsOptions));
-    middleware.options('*', cors(corsOptions));
+    middleware.options("*", cors(corsOptions));
 
     // RESPOND TO IS-ALIVE PING
     middleware.get(/^\/health-check\/?$/, (_req, res) => res.sendStatus(200));
@@ -94,17 +127,22 @@ export class PreviewServerFactory {
       try {
         const pr = +canHavePublicPreviewRe.exec(req.url)![1];
 
-        if (!await buildVerifier.getPrIsTrusted(pr)) {
+        if (!(await buildVerifier.getPrIsTrusted(pr))) {
           // Cannot have preview: PR not automatically verifiable as "trusted".
-          res.send({canHavePublicPreview: false, reason: 'Not automatically verifiable as "trusted".'});
-          logger.log(`PR:${pr} - Cannot have a public preview, because not automatically verifiable as "trusted".`);
+          res.send({
+            canHavePublicPreview: false,
+            reason: 'Not automatically verifiable as "trusted".'
+          });
+          logger.log(
+            `PR:${pr} - Cannot have a public preview, because not automatically verifiable as "trusted".`
+          );
         } else {
           // Can have preview.
-          res.send({canHavePublicPreview: true, reason: null});
+          res.send({ canHavePublicPreview: true, reason: null });
           logger.log(`PR:${pr} - Can have a public preview.`);
         }
       } catch (err) {
-        logger.error('Previewability check error', err);
+        logger.error("Previewability check error", err);
         respondWithError(res, err);
       }
     });
@@ -113,6 +151,7 @@ export class PreviewServerFactory {
     middleware.get(/^\/auth-check\/?$/, async (_, res) => {
       const response = res;
       try {
+        logger.error("Auth0 request", JSON.stringify(cfg));
         const options = {
           body: {
             audience: cfg.auth0Audience,
@@ -122,22 +161,22 @@ export class PreviewServerFactory {
             password: cfg.auth0Password,
             realm: cfg.auth0Realm,
             scope: cfg.auth0Scope,
-            username: cfg.auth0Username,
+            username: cfg.auth0Username
           },
           json: true,
-          method: 'POST',
-          uri: `${cfg.auth0Domain}/oauth/token`,
+          method: "POST",
+          uri: `${cfg.auth0Domain}/oauth/token`
         };
         request(options, (error: any, __: any, body: any) => {
           if (error) {
-            logger.error('Auth0 request for token error', error);
+            logger.error("Auth0 request for token error", error);
             respondWithError(res, error);
           }
-          response.setHeader('Content-Type', 'application/json');
+          response.setHeader("Content-Type", "application/json");
           response.send(JSON.stringify({ access_token: body.access_token }));
         });
       } catch (err) {
-        logger.error('Auth0 token error', err);
+        logger.error("Auth0 token error", err);
         respondWithError(res, err);
       }
     });
@@ -145,56 +184,87 @@ export class PreviewServerFactory {
     // CIRCLE_CI BUILD COMPLETE WEBHOOK
     middleware.post(/^\/circle-build\/?$/, jsonParser, async (req, res) => {
       try {
-        if (!(
-          req.is('json') &&
-          req.body &&
-          req.body.payload &&
-          req.body.payload.build_num > 0 &&
-          req.body.payload.build_parameters &&
-          req.body.payload.build_parameters.CIRCLE_JOB
-        )) {
+        if (
+          !(
+            req.is("json") &&
+            req.body &&
+            req.body.payload &&
+            req.body.payload.build_num > 0 &&
+            req.body.payload.build_parameters &&
+            req.body.payload.build_parameters.CIRCLE_JOB
+          )
+        ) {
           throwRequestError(400, `Incorrect body content. Expected JSON`, req);
         }
 
         const job = req.body.payload.build_parameters.CIRCLE_JOB;
         const buildNum = req.body.payload.build_num;
 
-        logger.log(`Build:${buildNum}, Job:${job} - processing web-hook trigger`);
+        logger.log(
+          `Build:${buildNum}, Job:${job} - processing web-hook trigger`
+        );
 
         if (job !== AIO_PREVIEW_JOB) {
           res.sendStatus(204);
-          logger.log(`Build:${buildNum}, Job:${job} -`,
-                     `Skipping preview processing because this is not the "${AIO_PREVIEW_JOB}" job.`);
+          logger.log(
+            `Build:${buildNum}, Job:${job} -`,
+            `Skipping preview processing because this is not the "${AIO_PREVIEW_JOB}" job.`
+          );
           return;
         }
 
-        const { pr, sha, org, repo, success } = await buildRetriever.getGithubInfo(buildNum);
+        const {
+          pr,
+          sha,
+          org,
+          repo,
+          success
+        } = await buildRetriever.getGithubInfo(buildNum);
 
         if (!success) {
           res.sendStatus(204);
-          logger.log(`PR:${pr}, Build:${buildNum} - Skipping preview processing because this build did not succeed.`);
+          logger.log(
+            `PR:${pr}, Build:${buildNum} - Skipping preview processing because this build did not succeed.`
+          );
           return;
         }
 
-        assert(cfg.githubOrg === org,
-          `Invalid webhook: expected "githubOrg" property to equal "${cfg.githubOrg}" but got "${org}".`);
-        assert(cfg.githubRepo === repo,
-          `Invalid webhook: expected "githubRepo" property to equal "${cfg.githubRepo}" but got "${repo}".`);
+        assert(
+          cfg.githubOrg === org,
+          `Invalid webhook: expected "githubOrg" property to equal "${
+            cfg.githubOrg
+          }" but got "${org}".`
+        );
+        assert(
+          cfg.githubRepo === repo,
+          `Invalid webhook: expected "githubRepo" property to equal "${
+            cfg.githubRepo
+          }" but got "${repo}".`
+        );
 
-        const artifactPath = await buildRetriever.downloadBuildArtifact(buildNum, pr, sha, cfg.buildArtifactPath);
+        const artifactPath = await buildRetriever.downloadBuildArtifact(
+          buildNum,
+          pr,
+          sha,
+          cfg.buildArtifactPath
+        );
         const isPublic = await buildVerifier.getPrIsTrusted(pr);
         await buildCreator.create(pr, sha, artifactPath, isPublic);
         res.sendStatus(isPublic ? 201 : 202);
       } catch (err) {
-        logger.error('CircleCI webhook error', err);
+        logger.error("CircleCI webhook error", err);
         respondWithError(res, err);
       }
     });
 
     // GITHUB PR UPDATED WEBHOOK
     middleware.post(/^\/pr-updated\/?$/, jsonParser, async (req, res) => {
-      const { action, number: prNo }: { action?: string, number?: number } = req.body;
-      const visMayHaveChanged = !action || (action === 'labeled') || (action === 'unlabeled');
+      const {
+        action,
+        number: prNo
+      }: { action?: string; number?: number } = req.body;
+      const visMayHaveChanged =
+        !action || action === "labeled" || action === "unlabeled";
 
       try {
         if (!visMayHaveChanged) {
@@ -207,43 +277,59 @@ export class PreviewServerFactory {
           res.sendStatus(200);
         }
       } catch (err) {
-        logger.error('PR update hook error', err);
+        logger.error("PR update hook error", err);
         respondWithError(res, err);
       }
     });
 
     // ALL OTHER REQUESTS
-    middleware.all('*', req => throwRequestError(404, 'Unknown resource', req));
+    middleware.all("*", req => throwRequestError(404, "Unknown resource", req));
     middleware.use((err: any, _req: any, res: express.Response, _next: any) => {
-      const statusText = http.STATUS_CODES[err.status] || '???';
-      logger.error(`Preview server error: ${err.status} - ${statusText}:`, err.message);
+      const statusText = http.STATUS_CODES[err.status] || "???";
+      logger.error(
+        `Preview server error: ${err.status} - ${statusText}:`,
+        err.message
+      );
       respondWithError(res, err);
     });
 
     return middleware;
   }
 
-  public static createBuildCreator(prs: GithubPullRequests, buildsDir: string, domainName: string): BuildCreator {
+  public static createBuildCreator(
+    prs: GithubPullRequests,
+    buildsDir: string,
+    domainName: string
+  ): BuildCreator {
     const buildCreator = new BuildCreator(buildsDir);
     const postPreviewsComment = (pr: number, shas: string[]) => {
-      const body = shas.
-        map(sha => `You can preview ${sha} at https://pr${pr}-${sha}.${domainName}/.`).
-        join('\n');
+      const body = shas
+        .map(
+          sha =>
+            `You can preview ${sha} at https://pr${pr}-${sha}.${domainName}/.`
+        )
+        .join("\n");
 
       return prs.addComment(pr, body);
     };
 
-    buildCreator.on(CreatedBuildEvent.type, ({pr, sha, isPublic}: CreatedBuildEvent) => {
-      if (isPublic) {
-        postPreviewsComment(pr, [sha]);
+    buildCreator.on(
+      CreatedBuildEvent.type,
+      ({ pr, sha, isPublic }: CreatedBuildEvent) => {
+        if (isPublic) {
+          postPreviewsComment(pr, [sha]);
+        }
       }
-    });
+    );
 
-    buildCreator.on(ChangedPrVisibilityEvent.type, ({pr, shas, isPublic}: ChangedPrVisibilityEvent) => {
-      if (isPublic && shas.length) {
-        postPreviewsComment(pr, shas);
+    buildCreator.on(
+      ChangedPrVisibilityEvent.type,
+      ({ pr, shas, isPublic }: ChangedPrVisibilityEvent) => {
+        if (isPublic && shas.length) {
+          postPreviewsComment(pr, shas);
+        }
       }
-    });
+    );
 
     return buildCreator;
   }
